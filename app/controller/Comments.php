@@ -6,7 +6,7 @@ namespace app\controller;
 use think\Request;
 use app\model\Comments as CommentsModel;
 
-class Comments
+class Comments extends Base
 {
     /**
      * 显示资源列表
@@ -15,8 +15,14 @@ class Comments
      */
     public function index()
     {
-        //
-        return CommentsModel::select();
+        $data = CommentsModel::field('uid, content')->select();
+
+        if($data->isEmpty()){
+            return $this->create($data, '數據不存在', 204);
+        }else{
+            //改為繼承基類返回數據
+            return $this->create($data, '熱騰騰的數據上桌了');
+        }
     }
 
     /**
