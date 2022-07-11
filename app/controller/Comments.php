@@ -15,7 +15,10 @@ class Comments extends Base
      */
     public function index()
     {
-        $data = CommentsModel::field('uid, content')->select();
+        //$data = CommentsModel::field('uid, content')->paginate(2);
+        $data = CommentsModel::field('uid, content')
+                ->page($this->page, $this->pageSize)
+                ->select();
 
         if($data->isEmpty()){
             return $this->create($data, '數據不存在', 204);
