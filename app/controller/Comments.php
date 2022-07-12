@@ -23,7 +23,7 @@ class Comments extends Base
             return $this->create($data, '數據不存在', 204);
         }else{
             //改為繼承基類返回數據
-            return $this->create($data, '熱騰騰的數據上桌了');
+            return $this->create($data, '熱騰騰的數據上桌了', 200);
         }
     }
 
@@ -47,7 +47,7 @@ class Comments extends Base
     public function read($id)
     {
         //
-        return CommentsModel::where('cid', $id)->select();
+        return CommentsModel::where('id', $id)->select();
     }
 
     /**
