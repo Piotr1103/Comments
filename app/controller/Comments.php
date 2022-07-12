@@ -15,7 +15,6 @@ class Comments extends Base
      */
     public function index()
     {
-        //$data = CommentsModel::field('uid, content')->paginate(2);
         $data = CommentsModel::field('uid, content')
                 ->page($this->page, $this->pageSize)
                 ->select();
