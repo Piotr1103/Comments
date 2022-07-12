@@ -31,4 +31,10 @@ abstract class Base
         //返回API接口
         return Response::create($result, $type);
 	}
+
+    //繼承控制器內部方法不存在時返回的API數據
+    public function __call($name, $arguments)
+    {
+        return $this->create([], '方法不存在~', 404);
+    }
 }
