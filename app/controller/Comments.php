@@ -5,7 +5,9 @@ namespace app\controller;
 
 use think\Request;
 use think\facade\Validate;
+use think\exception\ValidateException;
 use app\model\Comments as CommentsModel;
+use app\validate\Comments as CommentsValidate;
 
 class Comments extends Base
 {
@@ -36,7 +38,24 @@ class Comments extends Base
      */
     public function save(Request $request)
     {
-        //
+        //獲取POST數據
+        $data = $request->param();
+
+        try{
+            validate(CommentsValidate::class)->batch(true)->check($data);
+        }catch(ValidateException $e){
+            //需引入think\exception\ValidateException方能取得錯誤內容並加入API數據中
+            //Base類定義的msg參數為string，若開啟batch(true)批量錯誤提示則getError返回數組，須將其扁平化為字串
+            return $this->create([], implode('|', $e->getError()), 400);
+        }
+
+        $id = CommentsModel::create($data)->getData('id');
+
+        if(empty($id)){
+            return $this->create([], '寫入失敗~', 400);
+        }else{
+            return $this->create($id, $id.'寫入成功~', 200);
+        }
     }
 
     /**
