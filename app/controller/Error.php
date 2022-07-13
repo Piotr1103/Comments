@@ -11,6 +11,6 @@ class Error extends Base
     public function index()
     {
         //404
-        return $this->create([], '資源不存在~', 404);
+        return $this->create([], '資源不存在', 404);
     }
 }

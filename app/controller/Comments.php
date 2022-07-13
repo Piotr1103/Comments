@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace app\controller;
 
 use think\Request;
+use think\facade\Validate;
 use app\model\Comments as CommentsModel;
 
 class Comments extends Base
@@ -19,10 +20,10 @@ class Comments extends Base
                 ->page($this->page, $this->pageSize)
                 ->select();
 
+        //改為繼承基類返回數據，判斷是否取得資源
         if($data->isEmpty()){
             return $this->create($data, '數據不存在', 204);
         }else{
-            //改為繼承基類返回數據
             return $this->create($data, '熱騰騰的數據上桌了', 200);
         }
     }
@@ -46,8 +47,20 @@ class Comments extends Base
      */
     public function read($id)
     {
-        //
-        return CommentsModel::where('id', $id)->select();
+        //使用withoutField函數來排除id字段的獲取
+        $data = CommentsModel::withoutField('id')->find($id);
+
+        //檢查參數型別是否是正確
+        if(!Validate::isInteger($id)){
+            return $this->create([], 'id參數錯誤~', 400);
+        }
+
+        //空數據不可用isEmpty方法來判斷，因此需改成empty函數
+        if(empty($data)){
+            return $this->create([], '數據不存在', 204);
+        }else{
+            return $this->create($data, '熱騰騰的數據上桌了', 200);
+        }
     }
 
     /**
